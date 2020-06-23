@@ -1,5 +1,6 @@
 package com.example.simpletodo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,6 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final String KEY_ITEM_TEXT = "item_text";
+    public static final String KEY_ITEM_POSITION = "item_position";
+    public static final int EDIT_TEXT_CODE = 20;
 
     List<String> items;
 
@@ -53,8 +58,16 @@ public class MainActivity extends AppCompatActivity {
         ItemsAdapter.OnClickListener onClickListener = new ItemsAdapter.OnClickListener() {
             @Override
             public void onItemClicked(int position) {
-                // Open edit activity
-                Log.d("MainActivity", "Single click at position" + position);
+                Log.d("MainActivity", "Single click at position " + position);
+                // create new activity
+                // mainactivity.this is the current instance, editactivity.class is just the class
+                // because there is no current activity for it
+                Intent i = new Intent(MainActivity.this, EditActivity.class);
+                // pass data being edited
+                i.putExtra(KEY_ITEM_TEXT, items.get(position));
+                i.putExtra(KEY_ITEM_POSITION, position);
+                // display the activity
+                startActivityForResult(i, EDIT_TEXT_CODE);
             }
         };
         itemsAdapter = new ItemsAdapter(items, onLongClickListener, onClickListener);
