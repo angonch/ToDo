@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
         loadItems();
 
-        ItemsAdapter.OnLongClickLister onLongClickLister = new ItemsAdapter.OnLongClickLister() {
+        ItemsAdapter.OnLongClickListener onLongClickListener = new ItemsAdapter.OnLongClickListener() {
             @Override
             public void onItemLongClicked(int position) {
                 // Delete item from the model
@@ -49,7 +49,15 @@ public class MainActivity extends AppCompatActivity {
                 saveItems();
             }
         };
-        itemsAdapter = new ItemsAdapter(items, onLongClickLister);
+
+        ItemsAdapter.OnClickListener onClickListener = new ItemsAdapter.OnClickListener() {
+            @Override
+            public void onItemClicked(int position) {
+                // Open edit activity
+                Log.d("MainActivity", "Single click at position" + position);
+            }
+        };
+        itemsAdapter = new ItemsAdapter(items, onLongClickListener, onClickListener);
         rvItems.setAdapter(itemsAdapter);
         rvItems.setLayoutManager(new LinearLayoutManager(this));
 
