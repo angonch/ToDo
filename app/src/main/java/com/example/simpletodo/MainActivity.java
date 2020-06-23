@@ -2,6 +2,7 @@ package com.example.simpletodo;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
                 items.remove(position);
                 // Notify adapter
                 itemsAdapter.notifyItemRemoved(position);
-                Toast.makeText(getApplicationContext(), "Item removed", Toast.LENGTH_SHORT);
+                Toast.makeText(getApplicationContext(), "Item removed", Toast.LENGTH_SHORT).show();
                 saveItems();
             }
         };
@@ -88,6 +89,27 @@ public class MainActivity extends AppCompatActivity {
                 saveItems();
             }
         });
+    }
+
+    // Handle result of edit activity
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode == RESULT_OK && requestCode == EDIT_TEXT_CODE) {
+            // Retrieve updated text value
+            String itemText = data.getStringExtra(KEY_ITEM_TEXT);
+            // Extract original position of edited item from position key
+            int position = data.getExtras().getInt(KEY_ITEM_POSITION);
+            // Update model at right position with new item text
+            items.set(position, itemText);
+            // Notify adapter
+            itemsAdapter.notifyItemChanged(position);
+            // Persist changes
+            saveItems();
+            // Notify User
+            Toast.makeText(getApplicationContext(), "Item updated successfully", Toast.LENGTH_SHORT).show();
+        } else {
+            Log.w("MainActivity", "Unknown call to onActivityResult");
+        }
     }
 
     private File getDataFile() {
